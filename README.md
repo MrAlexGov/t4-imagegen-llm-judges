@@ -6,7 +6,7 @@
 human and by LLM judges from the Kaggle Benchmarks quota. Code, images and every rating are open.*
 
 
-**Links:** dataset — [Hugging Face](https://huggingface.co/datasets/MrAlexGov/t4-imagegen-llm-judges) · [Kaggle](https://www.kaggle.com/datasets/mralexgov/t4-imagegen-llm-judges) · notebook — [Kaggle](https://www.kaggle.com/code/mralexgov/t4-imagegen-llm-judges) · [Русская версия](README.ru.md)
+**Links:** dataset — [Hugging Face](https://huggingface.co/datasets/MrAlexGov/t4-imagegen-llm-judges) · notebook — [Kaggle](https://www.kaggle.com/code/mralexgov/t4-image-generators-vs-llm-judges) · [Русская версия](README.ru.md)
 
 ## TL;DR
 
@@ -130,7 +130,7 @@ routing detail of the proxy; we did not investigate).
 
 Code: `kernel/` (generation on Kaggle), `judge/` (prompts, checklists, LLM judges), `human/index.html` (blind rating
 page), `analysis.py` (all tables and intervals), `make_compare.py` (comparison grids).
-Data: 40 images, prompts, checklists, every judge answer and the human ratings — dataset on Hugging Face and Kaggle.
+Data: 40 images, prompts, checklists, every judge answer and the human ratings — dataset on Hugging Face.
 
 ### Running
 

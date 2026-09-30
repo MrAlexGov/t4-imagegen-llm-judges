@@ -6,7 +6,7 @@
 оценка вслепую человеком и LLM-судьями из квоты Kaggle Benchmarks. Код, картинки и все оценки открыты.*
 
 
-**Ссылки:** датасет — [Hugging Face](https://huggingface.co/datasets/MrAlexGov/t4-imagegen-llm-judges) · [Kaggle](https://www.kaggle.com/datasets/mralexgov/t4-imagegen-llm-judges) · ноутбук — [Kaggle](https://www.kaggle.com/code/mralexgov/t4-imagegen-llm-judges) · [English](README.md)
+**Ссылки:** датасет — [Hugging Face](https://huggingface.co/datasets/MrAlexGov/t4-imagegen-llm-judges) · ноутбук — [Kaggle](https://www.kaggle.com/code/mralexgov/t4-image-generators-vs-llm-judges) · [English](README.md)
 
 ## Коротко
 
