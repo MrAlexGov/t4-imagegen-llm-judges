@@ -6,7 +6,7 @@
 human and by LLM judges from the Kaggle Benchmarks quota. Code, images and every rating are open.*
 
 
-**Links:** dataset — [Hugging Face](https://huggingface.co/datasets/MrAlexGov/t4-imagegen-llm-judges) · notebook — [Kaggle](https://www.kaggle.com/code/mralexgov/t4-image-generators-vs-llm-judges) · [Русская версия](README.ru.md)
+**Links:** dataset — [Hugging Face](https://huggingface.co/datasets/MrAlexGov/t4-imagegen-llm-judges) · [Kaggle](https://www.kaggle.com/datasets/mralexgov/t4-imagegen-llm-judges) · notebook — [Kaggle](https://www.kaggle.com/code/mralexgov/t4-image-generators-vs-llm-judges) · [Русская версия](README.ru.md)
 
 ## TL;DR
 
