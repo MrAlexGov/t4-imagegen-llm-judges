@@ -1,0 +1,166 @@
+<title>Слепая оценка картинок</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: одна карточка оценки — картинка слева, бланк проверки справа; на телефоне — в столбик */
+:root{
+  --bg:#f3f4f1; --panel:#ffffff; --ink:#1d2220; --muted:#5f6763; --line:#d9ddd7;
+  --accent:#2f6b4f; --accent-ink:#ffffff; --yes:#2f6b4f; --no:#a3402f; --chip:#e8ebe6;
+  --f-display:"Unbounded",system-ui,sans-serif; --f-body:"Golos Text",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141816; --panel:#1c211f; --ink:#e7ebe8; --muted:#9aa39e; --line:#2f3633;
+  --accent:#6fbf94; --accent-ink:#0f1a14; --yes:#6fbf94; --no:#e38b76; --chip:#252b28; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141816; --panel:#1c211f; --ink:#e7ebe8; --muted:#9aa39e; --line:#2f3633;
+  --accent:#6fbf94; --accent-ink:#0f1a14; --yes:#6fbf94; --no:#e38b76; --chip:#252b28; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body)}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 40px;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+h1{font:700 1.35rem/1.2 var(--f-display);margin:0;text-wrap:balance;letter-spacing:.01em}
+.meta{font:500 .8rem var(--f-mono);color:var(--muted)}
+.bar{height:6px;background:var(--chip);border-radius:3px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+@media (max-width:820px){.card{grid-template-columns:minmax(0,1fr)}}
+.imgbox{aspect-ratio:1/1;max-width:100%;background:var(--chip);border-radius:6px;overflow:hidden}
+.imgbox img{width:100%;height:100%;object-fit:contain;display:block;cursor:zoom-in}
+.side{display:grid;gap:14px;align-content:start;min-width:0}
+.label{font:500 .72rem var(--f-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.prompt{font:400 .95rem/1.45 var(--f-body);background:var(--chip);border-radius:6px;padding:10px 12px;overflow-wrap:anywhere}
+.checks{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.check{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{font:500 .85rem var(--f-body);padding:6px 12px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"].y{background:var(--yes);color:var(--accent-ink)}
+.seg button[aria-pressed="true"].n{background:var(--no);color:var(--accent-ink)}
+.scale{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.scale button{font:500 .85rem var(--f-mono);padding:7px 0;border:1px solid var(--line);border-radius:5px;background:transparent;color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.hint{font-size:.8rem;color:var(--muted)}
+textarea{width:100%;min-height:54px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px;resize:vertical;box-sizing:border-box}
+.nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 .9rem var(--f-body);padding:9px 16px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:default}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.status{font:500 .8rem var(--f-mono);color:var(--muted);margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:4px}
+.grid button{font:500 .75rem var(--f-mono);padding:6px 0;border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer}
+.grid button.done{background:var(--chip);color:var(--ink)}.grid button.cur{border-color:var(--accent);color:var(--accent)}
+.note{font-size:.85rem;color:var(--muted);max-width:70ch}
+.zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:16px;cursor:zoom-out;z-index:9}
+.zoom img{max-width:100%;max-height:100%}
+@media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
+</style>
+<div class="wrap">
+  <header>
+    <h1>Слепая оценка картинок</h1>
+    <span class="meta" id="count">0 / 0 оценено</span>
+  </header>
+  <div class="bar"><i id="prog"></i></div>
+  <p class="note">Модель, которая сгенерировала картинку, скрыта. Отметьте каждый пункт чек-листа и поставьте две оценки. Сохраняется автоматически при переходе к следующей картинке; можно закрыть страницу и продолжить позже.</p>
+  <div class="card">
+    <div class="imgbox"><img id="img" alt="Сгенерированное изображение"></div>
+    <div class="side">
+      <div><div class="label">Промпт</div><div class="prompt" id="prompt"></div></div>
+      <div><div class="label">Чек-лист — выполнено?</div><ul class="checks" id="checks"></ul></div>
+      <div><div class="label">Качество и эстетика</div><div class="scale" id="q"></div><div class="hint">1 — плохо, 10 — отлично</div></div>
+      <div><div class="label">Артефакты</div><div class="scale" id="a"></div><div class="hint">10 — артефактов нет, 1 — сильные (руки, геометрия, мусорный текст)</div></div>
+      <div><div class="label">Комментарий (необязательно)</div><textarea id="comment"></textarea></div>
+      <div class="nav">
+        <button class="btn" id="prev">← Назад</button>
+        <button class="btn primary" id="next">Сохранить и дальше →</button>
+        <span class="status" id="status"></span>
+      </div>
+    </div>
+  </div>
+  <div><div class="label">Все картинки</div><div class="grid" id="grid"></div></div>
+</div>
+<script>
+const ITEMS = [{"key": "cf489d2612", "prompt": "A simple infographic poster titled \"AI AGENT\" with three labeled icons: \"PLAN\", \"ACT\", \"CHECK\", connected by arrows, clean corporate design", "criteria": ["Постер-инфографика в чистом корпоративном дизайне", "Заголовок читается ровно как \"AI AGENT\"", "Три иконки с подписями ровно \"PLAN\", \"ACT\", \"CHECK\"", "Иконки соединены стрелками", "Нет лишнего неразборчивого текста"]}, {"key": "9fce5b9c56", "prompt": "A red cube on top of a blue sphere, a green cone to the left of them, on a white table, studio lighting, minimalist", "criteria": ["Красный куб стоит сверху на синем шаре", "Зелёный конус находится слева от куба и шара", "Предметы на белом столе", "Минималистичная студийная сцена без лишних объектов"]}, {"key": "e094836675", "prompt": "Close-up portrait photo of an elderly fisherman with a weathered face and grey beard, soft morning light, shallow depth of field, 85mm lens, highly detailed skin texture", "criteria": ["Портрет пожилого мужчины крупным планом", "Седая борода", "Обветренное лицо с детальной текстурой кожи", "Мягкий утренний свет, малая глубина резкости (фон размыт)"]}, {"key": "2888b08d1e", "prompt": "Product photo of a matte black wireless headphones on a marble surface, soft shadows, commercial advertising style", "criteria": ["Беспроводные наушники матово-чёрного цвета", "Мраморная поверхность", "Мягкие тени", "Коммерческий рекламный стиль предметной съёмки"]}, {"key": "496a455b7b", "prompt": "Flat vector illustration of a cozy home office: a laptop, a cat sleeping on the desk, a plant, warm pastel colors, clean lines", "criteria": ["Плоская векторная иллюстрация (не фото, не 3D)", "Ноутбук на столе", "Кот спит на столе", "Растение", "Тёплые пастельные цвета, чистые линии"]}, {"key": "5f9dbbe5b0", "prompt": "Wide landscape of snowy mountains at sunset, a frozen lake in the foreground, pine trees, golden hour, ultra detailed", "criteria": ["Заснеженные горы", "Закат / золотой час", "Замёрзшее озеро на переднем плане", "Сосны в кадре"]}, {"key": "8e2bd5427f", "prompt": "Close-up portrait photo of an elderly fisherman with a weathered face and grey beard, soft morning light, shallow depth of field, 85mm lens, highly detailed skin texture", "criteria": ["Портрет пожилого мужчины крупным планом", "Седая борода", "Обветренное лицо с детальной текстурой кожи", "Мягкий утренний свет, малая глубина резкости (фон размыт)"]}, {"key": "5c91277bca", "prompt": "A neon sign on a brick wall that says \"OPEN 24/7\" in bright pink letters, rainy night street, reflections on wet asphalt", "criteria": ["Неоновая вывеска на кирпичной стене", "Текст читается ровно как \"OPEN 24/7\" без лишних или искажённых символов", "Буквы ярко-розовые", "Дождливая ночная улица с отражениями на мокром асфальте"]}, {"key": "5733d1b1bd", "prompt": "Wide landscape of snowy mountains at sunset, a frozen lake in the foreground, pine trees, golden hour, ultra detailed", "criteria": ["Заснеженные горы", "Закат / золотой час", "Замёрзшее озеро на переднем плане", "Сосны в кадре"]}, {"key": "39e4c3097c", "prompt": "A pianist's hands playing a grand piano keyboard, top-down view, dramatic lighting, realistic fingers", "criteria": ["Руки пианиста на клавиатуре рояля", "Вид сверху вниз (top-down)", "На каждой руке пять пальцев правильной формы, без слипшихся или лишних", "Клавиатура без искажений (корректное чередование чёрных и белых клавиш)"]}, {"key": "54414fd286", "prompt": "A neon sign on a brick wall that says \"OPEN 24/7\" in bright pink letters, rainy night street, reflections on wet asphalt", "criteria": ["Неоновая вывеска на кирпичной стене", "Текст читается ровно как \"OPEN 24/7\" без лишних или искажённых символов", "Буквы ярко-розовые", "Дождливая ночная улица с отражениями на мокром асфальте"]}, {"key": "a53ff1aece", "prompt": "Top-down photo of a bowl of ramen with a soft-boiled egg, green onions, chashu pork, steam rising, dark wooden table", "criteria": ["Вид сверху на миску рамена", "Яйцо всмятку", "Зелёный лук и свинина чашу", "Пар поднимается", "Тёмный деревянный стол"]}, {"key": "1b575bc259", "prompt": "A red cube on top of a blue sphere, a green cone to the left of them, on a white table, studio lighting, minimalist", "criteria": ["Красный куб стоит сверху на синем шаре", "Зелёный конус находится слева от куба и шара", "Предметы на белом столе", "Минималистичная студийная сцена без лишних объектов"]}, {"key": "f0a7bbf8b7", "prompt": "Top-down photo of a bowl of ramen with a soft-boiled egg, green onions, chashu pork, steam rising, dark wooden table", "criteria": ["Вид сверху на миску рамена", "Яйцо всмятку", "Зелёный лук и свинина чашу", "Пар поднимается", "Тёмный деревянный стол"]}, {"key": "2c73b97bc4", "prompt": "A pianist's hands playing a grand piano keyboard, top-down view, dramatic lighting, realistic fingers", "criteria": ["Руки пианиста на клавиатуре рояля", "Вид сверху вниз (top-down)", "На каждой руке пять пальцев правильной формы, без слипшихся или лишних", "Клавиатура без искажений (корректное чередование чёрных и белых клавиш)"]}, {"key": "4cfd8a439a", "prompt": "Wide landscape of snowy mountains at sunset, a frozen lake in the foreground, pine trees, golden hour, ultra detailed", "criteria": ["Заснеженные горы", "Закат / золотой час", "Замёрзшее озеро на переднем плане", "Сосны в кадре"]}, {"key": "3f683cd432", "prompt": "Flat vector illustration of a cozy home office: a laptop, a cat sleeping on the desk, a plant, warm pastel colors, clean lines", "criteria": ["Плоская векторная иллюстрация (не фото, не 3D)", "Ноутбук на столе", "Кот спит на столе", "Растение", "Тёплые пастельные цвета, чистые линии"]}, {"key": "d5f87df073", "prompt": "Product photo of a matte black wireless headphones on a marble surface, soft shadows, commercial advertising style", "criteria": ["Беспроводные наушники матово-чёрного цвета", "Мраморная поверхность", "Мягкие тени", "Коммерческий рекламный стиль предметной съёмки"]}, {"key": "6d9a29569f", "prompt": "A red cube on top of a blue sphere, a green cone to the left of them, on a white table, studio lighting, minimalist", "criteria": ["Красный куб стоит сверху на синем шаре", "Зелёный конус находится слева от куба и шара", "Предметы на белом столе", "Минималистичная студийная сцена без лишних объектов"]}, {"key": "88a0a257f7", "prompt": "A pianist's hands playing a grand piano keyboard, top-down view, dramatic lighting, realistic fingers", "criteria": ["Руки пианиста на клавиатуре рояля", "Вид сверху вниз (top-down)", "На каждой руке пять пальцев правильной формы, без слипшихся или лишних", "Клавиатура без искажений (корректное чередование чёрных и белых клавиш)"]}, {"key": "95cb8379c9", "prompt": "Close-up portrait photo of an elderly fisherman with a weathered face and grey beard, soft morning light, shallow depth of field, 85mm lens, highly detailed skin texture", "criteria": ["Портрет пожилого мужчины крупным планом", "Седая борода", "Обветренное лицо с детальной текстурой кожи", "Мягкий утренний свет, малая глубина резкости (фон размыт)"]}, {"key": "c07da97835", "prompt": "A neon sign on a brick wall that says \"OPEN 24/7\" in bright pink letters, rainy night street, reflections on wet asphalt", "criteria": ["Неоновая вывеска на кирпичной стене", "Текст читается ровно как \"OPEN 24/7\" без лишних или искажённых символов", "Буквы ярко-розовые", "Дождливая ночная улица с отражениями на мокром асфальте"]}, {"key": "1d12f26cb2", "prompt": "Anime style girl with short silver hair standing on a rooftop at night, city lights below, wind blowing her jacket, detailed background", "criteria": ["Аниме-стиль", "Девушка с короткими серебристыми волосами", "Стоит на крыше ночью, внизу огни города", "Ветер развевает куртку", "Детализированный фон"]}, {"key": "7dd6e25a28", "prompt": "A simple infographic poster titled \"AI AGENT\" with three labeled icons: \"PLAN\", \"ACT\", \"CHECK\", connected by arrows, clean corporate design", "criteria": ["Постер-инфографика в чистом корпоративном дизайне", "Заголовок читается ровно как \"AI AGENT\"", "Три иконки с подписями ровно \"PLAN\", \"ACT\", \"CHECK\"", "Иконки соединены стрелками", "Нет лишнего неразборчивого текста"]}, {"key": "1c6187958e", "prompt": "A simple infographic poster titled \"AI AGENT\" with three labeled icons: \"PLAN\", \"ACT\", \"CHECK\", connected by arrows, clean corporate design", "criteria": ["Постер-инфографика в чистом корпоративном дизайне", "Заголовок читается ровно как \"AI AGENT\"", "Три иконки с подписями ровно \"PLAN\", \"ACT\", \"CHECK\"", "Иконки соединены стрелками", "Нет лишнего неразборчивого текста"]}, {"key": "fd094b8f87", "prompt": "Product photo of a matte black wireless headphones on a marble surface, soft shadows, commercial advertising style", "criteria": ["Беспроводные наушники матово-чёрного цвета", "Мраморная поверхность", "Мягкие тени", "Коммерческий рекламный стиль предметной съёмки"]}, {"key": "ee90c768dc", "prompt": "A simple infographic poster titled \"AI AGENT\" with three labeled icons: \"PLAN\", \"ACT\", \"CHECK\", connected by arrows, clean corporate design", "criteria": ["Постер-инфографика в чистом корпоративном дизайне", "Заголовок читается ровно как \"AI AGENT\"", "Три иконки с подписями ровно \"PLAN\", \"ACT\", \"CHECK\"", "Иконки соединены стрелками", "Нет лишнего неразборчивого текста"]}, {"key": "5124de1c02", "prompt": "A red cube on top of a blue sphere, a green cone to the left of them, on a white table, studio lighting, minimalist", "criteria": ["Красный куб стоит сверху на синем шаре", "Зелёный конус находится слева от куба и шара", "Предметы на белом столе", "Минималистичная студийная сцена без лишних объектов"]}, {"key": "e9fff922e3", "prompt": "A pianist's hands playing a grand piano keyboard, top-down view, dramatic lighting, realistic fingers", "criteria": ["Руки пианиста на клавиатуре рояля", "Вид сверху вниз (top-down)", "На каждой руке пять пальцев правильной формы, без слипшихся или лишних", "Клавиатура без искажений (корректное чередование чёрных и белых клавиш)"]}, {"key": "e9f05d040a", "prompt": "Close-up portrait photo of an elderly fisherman with a weathered face and grey beard, soft morning light, shallow depth of field, 85mm lens, highly detailed skin texture", "criteria": ["Портрет пожилого мужчины крупным планом", "Седая борода", "Обветренное лицо с детальной текстурой кожи", "Мягкий утренний свет, малая глубина резкости (фон размыт)"]}, {"key": "c72fc3ebb0", "prompt": "Top-down photo of a bowl of ramen with a soft-boiled egg, green onions, chashu pork, steam rising, dark wooden table", "criteria": ["Вид сверху на миску рамена", "Яйцо всмятку", "Зелёный лук и свинина чашу", "Пар поднимается", "Тёмный деревянный стол"]}, {"key": "aec81599b0", "prompt": "Anime style girl with short silver hair standing on a rooftop at night, city lights below, wind blowing her jacket, detailed background", "criteria": ["Аниме-стиль", "Девушка с короткими серебристыми волосами", "Стоит на крыше ночью, внизу огни города", "Ветер развевает куртку", "Детализированный фон"]}, {"key": "9e44e9858c", "prompt": "Flat vector illustration of a cozy home office: a laptop, a cat sleeping on the desk, a plant, warm pastel colors, clean lines", "criteria": ["Плоская векторная иллюстрация (не фото, не 3D)", "Ноутбук на столе", "Кот спит на столе", "Растение", "Тёплые пастельные цвета, чистые линии"]}, {"key": "43719f42ea", "prompt": "Product photo of a matte black wireless headphones on a marble surface, soft shadows, commercial advertising style", "criteria": ["Беспроводные наушники матово-чёрного цвета", "Мраморная поверхность", "Мягкие тени", "Коммерческий рекламный стиль предметной съёмки"]}, {"key": "d3fca0bb3e", "prompt": "Top-down photo of a bowl of ramen with a soft-boiled egg, green onions, chashu pork, steam rising, dark wooden table", "criteria": ["Вид сверху на миску рамена", "Яйцо всмятку", "Зелёный лук и свинина чашу", "Пар поднимается", "Тёмный деревянный стол"]}, {"key": "d81bc2d7db", "prompt": "Wide landscape of snowy mountains at sunset, a frozen lake in the foreground, pine trees, golden hour, ultra detailed", "criteria": ["Заснеженные горы", "Закат / золотой час", "Замёрзшее озеро на переднем плане", "Сосны в кадре"]}, {"key": "a1d7fcbbd8", "prompt": "Flat vector illustration of a cozy home office: a laptop, a cat sleeping on the desk, a plant, warm pastel colors, clean lines", "criteria": ["Плоская векторная иллюстрация (не фото, не 3D)", "Ноутбук на столе", "Кот спит на столе", "Растение", "Тёплые пастельные цвета, чистые линии"]}, {"key": "442b033579", "prompt": "Anime style girl with short silver hair standing on a rooftop at night, city lights below, wind blowing her jacket, detailed background", "criteria": ["Аниме-стиль", "Девушка с короткими серебристыми волосами", "Стоит на крыше ночью, внизу огни города", "Ветер развевает куртку", "Детализированный фон"]}, {"key": "64f1ea1d4b", "prompt": "A neon sign on a brick wall that says \"OPEN 24/7\" in bright pink letters, rainy night street, reflections on wet asphalt", "criteria": ["Неоновая вывеска на кирпичной стене", "Текст читается ровно как \"OPEN 24/7\" без лишних или искажённых символов", "Буквы ярко-розовые", "Дождливая ночная улица с отражениями на мокром асфальте"]}, {"key": "b727b428f8", "prompt": "Anime style girl with short silver hair standing on a rooftop at night, city lights below, wind blowing her jacket, detailed background", "criteria": ["Аниме-стиль", "Девушка с короткими серебристыми волосами", "Стоит на крыше ночью, внизу огни города", "Ветер развевает куртку", "Детализированный фон"]}];
+const $ = id => document.getElementById(id);
+let i = 0, saved = {}, cur = null, db = null, canWrite = true;
+
+function blank(it){ return {checks: it.criteria.map(() => null), quality: null, artifacts: null, comment: ""}; }
+function complete(r){ return r && r.quality && r.artifacts && r.checks.every(v => v !== null); }
+
+function scale(el, field){
+  el.innerHTML = "";
+  for (let n = 1; n <= 10; n++){
+    const b = document.createElement("button"); b.textContent = n; b.type = "button";
+    b.setAttribute("aria-pressed", cur[field] === n);
+    b.onclick = () => { cur[field] = n; scale(el, field); refresh(); };
+    el.appendChild(b);
+  }
+}
+function render(reset = true){
+  const it = ITEMS[i];
+  if (reset){
+    cur = saved[it.key] ? JSON.parse(JSON.stringify(saved[it.key])) : blank(it);
+    if (cur.checks.length !== it.criteria.length) cur = blank(it);
+  }
+  $("img").src = "img/" + it.key + ".jpg";
+  $("prompt").textContent = it.prompt;
+  const ul = $("checks"); ul.innerHTML = "";
+  it.criteria.forEach((c, k) => {
+    const li = document.createElement("li"); li.className = "check";
+    const t = document.createElement("span"); t.textContent = c;
+    const seg = document.createElement("span"); seg.className = "seg";
+    [["Да", true, "y"], ["Нет", false, "n"]].forEach(([lab, val, cls]) => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = lab; b.className = cls;
+      b.setAttribute("aria-pressed", cur.checks[k] === val);
+      b.onclick = () => { cur.checks[k] = val; render2(); };
+      seg.appendChild(b);
+    });
+    li.append(t, seg); ul.appendChild(li);
+  });
+  scale($("q"), "quality"); scale($("a"), "artifacts");
+  if (reset) $("comment").value = cur.comment || "";
+  refresh();
+}
+function render2(){ cur.comment = $("comment").value; render(false); }   // перерисовка без сброса несохранённых ответов
+function refresh(){
+  const done = ITEMS.filter(it => complete(saved[it.key])).length;
+  $("count").textContent = done + " / " + ITEMS.length + " оценено";
+  $("prog").style.width = (100 * done / ITEMS.length) + "%";
+  $("prev").disabled = i === 0;
+  $("next").textContent = i === ITEMS.length - 1 ? "Сохранить" : "Сохранить и дальше →";
+  $("next").disabled = !complete(cur) || !canWrite;
+  const g = $("grid"); g.innerHTML = "";
+  ITEMS.forEach((it, k) => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = k + 1;
+    b.className = (complete(saved[it.key]) ? "done " : "") + (k === i ? "cur" : "");
+    b.onclick = () => go(k); g.appendChild(b);
+  });
+}
+async function persist(){
+  const it = ITEMS[i]; cur.comment = $("comment").value.trim();
+  const body = {key: it.key, checks: cur.checks, quality: cur.quality, artifacts: cur.artifacts, comment: cur.comment, updated_at: new Date().toISOString()};
+  const before = JSON.stringify(saved[it.key] || null);
+  saved[it.key] = body;
+  if (!db){ $("status").textContent = "нет связи с хранилищем — оценки не сохраняются"; return; }
+  if (before === JSON.stringify(body)) return;
+  try { $("status").textContent = "сохраняю…"; await db.doc("ratings/" + it.key).set(body); $("status").textContent = "сохранено"; }
+  catch(e){
+    if (e && e.code === "invalid_argument"){ canWrite = false; $("status").textContent = "у вас нет прав записи"; }
+    else $("status").textContent = "не сохранилось, попробуйте ещё раз";
+  }
+}
+function go(k){ i = Math.max(0, Math.min(ITEMS.length - 1, k)); render(); window.scrollTo({top: 0}); }
+$("next").onclick = async () => { await persist(); const nxt = ITEMS.findIndex((it, k) => k > i && !complete(saved[it.key])); go(nxt >= 0 ? nxt : Math.min(i + 1, ITEMS.length - 1)); };
+$("prev").onclick = () => go(i - 1);
+$("img").onclick = () => { const z = document.createElement("div"); z.className = "zoom"; const im = document.createElement("img"); im.src = $("img").src; z.appendChild(im); z.onclick = () => z.remove(); document.body.appendChild(z); };
+render();
+$("status").textContent = "подключаюсь к хранилищу…";
+(async () => {
+  db = window.claude ? await window.claude.use("db") : null;
+  if (!db){ $("status").textContent = "хранилище недоступно — оценки не сохранятся"; return; }
+  db.collection("ratings").onSnapshot(snap => {
+    snap.docs.forEach(d => { saved[d.id] = d.data(); });
+    const first = ITEMS.findIndex(it => !complete(saved[it.key]));
+    if (!window.__started){ window.__started = true; if (first > 0) i = first; render(); } else refresh();
+    $("status").textContent = "";
+  }, e => { $("status").textContent = "хранилище отключилось — перезагрузите страницу"; });
+})();
+</script>

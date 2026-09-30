@@ -1,0 +1,12 @@
+[
+ {"id":"01_portrait","prompt":"Close-up portrait photo of an elderly fisherman with a weathered face and grey beard, soft morning light, shallow depth of field, 85mm lens, highly detailed skin texture","tests":"фотореализм, кожа, свет"},
+ {"id":"02_text_sign","prompt":"A neon sign on a brick wall that says \"OPEN 24/7\" in bright pink letters, rainy night street, reflections on wet asphalt","tests":"рендер текста"},
+ {"id":"03_hands","prompt":"A pianist's hands playing a grand piano keyboard, top-down view, dramatic lighting, realistic fingers","tests":"руки и пальцы"},
+ {"id":"04_composition","prompt":"A red cube on top of a blue sphere, a green cone to the left of them, on a white table, studio lighting, minimalist","tests":"следование композиции"},
+ {"id":"05_landscape","prompt":"Wide landscape of snowy mountains at sunset, a frozen lake in the foreground, pine trees, golden hour, ultra detailed","tests":"пейзаж, детализация"},
+ {"id":"06_illustration","prompt":"Flat vector illustration of a cozy home office: a laptop, a cat sleeping on the desk, a plant, warm pastel colors, clean lines","tests":"иллюстрация, стиль"},
+ {"id":"07_product","prompt":"Product photo of a matte black wireless headphones on a marble surface, soft shadows, commercial advertising style","tests":"предметная съёмка"},
+ {"id":"08_anime","prompt":"Anime style girl with short silver hair standing on a rooftop at night, city lights below, wind blowing her jacket, detailed background","tests":"аниме-стиль"},
+ {"id":"09_food","prompt":"Top-down photo of a bowl of ramen with a soft-boiled egg, green onions, chashu pork, steam rising, dark wooden table","tests":"еда, текстуры"},
+ {"id":"10_infographic","prompt":"A simple infographic poster titled \"AI AGENT\" with three labeled icons: \"PLAN\", \"ACT\", \"CHECK\", connected by arrows, clean corporate design","tests":"текст + схема"}
+]
