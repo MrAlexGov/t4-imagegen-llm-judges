@@ -78,12 +78,12 @@ Share of checklist items passed / mean quality score.
 
 | | SDXL | SD 3.5 Medium | FLUX-schnell | FLUX-dev |
 |---|---|---|---|---|
-| **Human** | 60% / 5.7 | 89% / 7.9 | 89% / 7.3 | **90% / 9.2** |
+| **Human** | 60% / 5.7 | 89% / 7.9 | 89% / 7.3 | **89% / 9.2** |
 | Claude Sonnet 5 | 65% / 7.3 | **84%** / 7.7 | 81% / 7.8 | 78% / **7.8** |
 | Gemini 3 Flash | 60% / 6.1 | **80%** / 7.1 | 78% / 7.0 | 75% / **7.4** |
-| Gemini 3.1 Flash Lite | 65% / 7.3 | 77% / 8.1 | **84%** / 8.3 | 82% / **8.4** |
-| GPT-5.4 nano | 69% / 7.6 | **88% / 8.3** | 86% / 8.2 | 76% / 7.9 |
-| Qwen3-Next (blind) | 70% / 8.1 | 73% / 8.0 | 70% / 7.9 | 71% / 8.1 |
+| Gemini 3.1 Flash Lite | 65% / 7.3 | 77% / 8.1 | **84%** / 8.2 | 82% / **8.3** |
+| GPT-5.4 nano | 68% / 7.5 | **88% / 8.3** | 86% / 8.2 | 76% / 7.9 |
+| Qwen3-Next (blind) | 70% / 8.1 | 72% / 8.0 | 70% / 7.9 | 71% / 8.1 |
 
 The human puts FLUX-dev 1.3–1.9 points above the rest on quality. For the judges, the gap between the best and worst
 of the three newer models is at most 0.4 points, and on the checklist three of four judges rank FLUX-dev last among them.
@@ -97,8 +97,8 @@ of the three newer models is at most 0.4 points, and on the checklist three of f
 | Claude Sonnet 5 | **0.88** (0.83–0.92) | **0.70** (0.46–0.87) | 0.39 (0.04–0.66) | 0.26 (−0.07–0.55) | 0.94 |
 | Gemini 3.1 Flash Lite | **0.88** (0.83–0.92) | 0.58 (0.30–0.80) | 0.42 (0.10–0.67) | 0.41 (0.08–0.66) | 0.98 |
 | Gemini 3 Flash | 0.85 (0.79–0.90) | 0.57 (0.28–0.80) | **0.55** (0.29–0.74) | **0.55** (0.27–0.76) | 0.93 |
-| GPT-5.4 nano | 0.84 (0.79–0.88) | 0.44 (0.11–0.69) | 0.28 (−0.05–0.56) | 0.22 (−0.12–0.53) | 0.90 |
-| Qwen3-Next (blind) | 0.67 (0.57–0.77) | 0.08 (−0.32–0.40) | 0.11 (−0.22–0.42) | 0.04 (−0.30–0.37) | 0.94 |
+| GPT-5.4 nano | 0.84 (0.79–0.88) | 0.44 (0.11–0.69) | 0.28 (−0.05–0.55) | 0.22 (−0.12–0.53) | 0.90 |
+| Qwen3-Next (blind) | 0.67 (0.57–0.76) | 0.08 (−0.32–0.40) | 0.11 (−0.22–0.42) | 0.04 (−0.30–0.37) | 0.94 |
 | *"Always yes" stub* | *0.81* | — | — | — | — |
 
 Hardest items for the generators (per the human): "wind blowing her jacket" — 0 of 4 models, "no extra illegible
